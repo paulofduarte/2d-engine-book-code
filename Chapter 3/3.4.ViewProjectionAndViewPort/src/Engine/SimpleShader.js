@@ -10,11 +10,48 @@ function SimpleShader(vertexShaderID, fragmentShaderID) {
 
     var gl = gEngine.Core.getGL();
 
+    // Returns a compiled shader from a shader in the DOM
+    // The id is the id of the script in the html file
+    function _loadAndCompileShader(filePath, shaderType) {
+        var xmlReq, shaderSource, compiledShader = null;
+
+        // Step A: Get the shader source with XMLHttpRequest
+        xmlReq = new XMLHttpRequest();
+        xmlReq.open("GET", filePath, false);
+        try {
+            xmlReq.send();
+        } catch (error) {
+            alert("Failed to load shader: " + filePath);
+            return null;
+        }
+        shaderSource = xmlReq.responseText;
+        if (shaderSource === null) {
+            alert("WARNING: Loading of: " + filePath + " failed!");
+            return null;
+        }
+
+        // Step B: Create the shader based on the shader type: vertex or fragment
+        compiledShader = gl.createShader(shaderType);
+
+        // Step C: Compile the created shader
+        gl.shaderSource(compiledShader, shaderSource);
+        gl.compileShader(compiledShader);
+
+        // Step D: check for errors and return results (null if error)
+        // The log info is how shader compilation errors are typically displayed.
+        // This is useful for debugging the shaders.
+        if (!gl.getShaderParameter(compiledShader, gl.COMPILE_STATUS)) {
+            alert("A shader compiling error occurred: " + gl.getShaderInfoLog(compiledShader));
+        }
+
+        return compiledShader;
+    }
+
     // Start of constructor code
 
     // Step A: Load and compile vertex and fragment shaders
-    var vertexShader = this._loadAndCompileShader(vertexShaderID, gl.VERTEX_SHADER);
-    var fragmentShader = this._loadAndCompileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
+    var vertexShader = _loadAndCompileShader(vertexShaderID, gl.VERTEX_SHADER);
+    var fragmentShader = _loadAndCompileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
 
     // Step B: Create and link the shader into a program
     this.mCompiledShader = gl.createProgram();
@@ -45,44 +82,6 @@ function SimpleShader(vertexShaderID, fragmentShaderID) {
     this.mModelTransform = gl.getUniformLocation(this.mCompiledShader, "uModelTransform");
     this.mViewProjTransform = gl.getUniformLocation(this.mCompiledShader, "uViewProjTransform");
 }
-
-// Returns a compiled shader from a shader in the DOM
-// The id is the id of the script in the html file
-SimpleShader.prototype._loadAndCompileShader = function (filePath, shaderType) {
-    var xmlReq, shaderSource, compiledShader = null;
-    var gl = gEngine.Core.getGL();
-
-    // Step A: Get the shader source with XMLHttpRequest
-    xmlReq = new XMLHttpRequest();
-    xmlReq.open("GET", filePath, false);
-    try {
-        xmlReq.send();
-    } catch (error) {
-        alert("Failed to load shader: " + filePath);
-        return null;
-    }
-    shaderSource = xmlReq.responseText;
-    if (shaderSource === null) {
-        alert("WARNING: Loading of: " + filePath + " failed!");
-        return null;
-    }
-
-    // Step B: Create the shader based on the shader type: vertex or fragment
-    compiledShader = gl.createShader(shaderType);
-
-    // Step C: Compile the created shader
-    gl.shaderSource(compiledShader, shaderSource);
-    gl.compileShader(compiledShader);
-
-    // Step D: check for errors and return results (null if error)
-    // The log info is how shader compilation errors are typically displayed.
-    // This is useful for debugging the shaders.
-    if (!gl.getShaderParameter(compiledShader, gl.COMPILE_STATUS)) {
-        alert("A shader compiling error occurred: " + gl.getShaderInfoLog(compiledShader));
-    }
-
-    return compiledShader;
-};
 
 SimpleShader.prototype.activateShader = function (pixelColor, vpMatrix) {
     var gl = gEngine.Core.getGL();
