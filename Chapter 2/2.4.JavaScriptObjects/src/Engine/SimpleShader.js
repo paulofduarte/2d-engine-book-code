@@ -9,7 +9,7 @@ function SimpleShader(vertexShaderID, fragmentShaderID) {
 
     // Returns a compiled shader from a shader in the DOM
     // The id is the id of the script in the html file
-    function _loadAndCompileShader(id, shaderType) {
+    var _loadAndCompileShader = function (id, shaderType) {
         var shaderText, shaderSource, compiledShader = null;
 
         // Step A: Get the shader source from index.html
@@ -31,7 +31,7 @@ function SimpleShader(vertexShaderID, fragmentShaderID) {
         }
 
         return compiledShader;
-    }
+    };
 
     // Start of constructor code
 
