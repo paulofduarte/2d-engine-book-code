@@ -112,7 +112,7 @@ Transform.prototype.setRotationInDegree = function (rotationInDegree) {
 };
 
 Transform.prototype.incRotationInDegree = function (deltaInDegree) {
-    this.setRotationInDegree(this.getRotationInRad() + deltaInDegree * Math.PI / 180.0);
+    this.setRotationInRad(this.getRotationInRad() + deltaInDegree * Math.PI / 180.0);
 };
 
 

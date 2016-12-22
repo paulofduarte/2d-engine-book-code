@@ -90,7 +90,7 @@ gEngine.Input = (function () {
 
     var update = function () {
         for (var i = 0; i < kKeys.LastKeyCode; i++) {
-            mIsKeyClicked[i] = !mKeyPreviousState[i] && mIsKeyPressed[i];
+            mIsKeyClicked[i] = mKeyPreviousState[i] && !mIsKeyPressed[i];
             mKeyPreviousState[i] = mIsKeyPressed[i];
         }
     };
