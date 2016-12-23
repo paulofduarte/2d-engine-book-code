@@ -31,7 +31,8 @@ gEngine.TextFileLoader = (function () {
                 var fileContent = null;
 
                 if (fileType === eTextFileType.eXMLFile) {
-                    fileContent = req.responseXML;
+                    var parser = new DOMParser();
+                    fileContent = parser.parseFromString(req.responseText, "text/xml");
                 } else {
                     fileContent = req.responseText;
                 }
