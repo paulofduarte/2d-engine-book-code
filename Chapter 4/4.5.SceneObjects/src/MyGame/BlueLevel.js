@@ -1,17 +1,24 @@
 "use strict"; // Operate in Strict mode
 
-function MyGame() {
+function BlueLevel() {
     // Scene file name
-    this.kSceneFile = "assets/MyGame.xml";
+    this.kSceneFile = "assets/BlueLevel.xml";
 
     // The camera to view the scene
     this.mCamera = null;
 
     // All squares
-    this.mSqSet = new Array(); // These are the renderable objects
+    this.mSqSet = []; // These are the renderable objects
 }
 
-MyGame.prototype.initialize = function () {
+gEngine.Core.inheritPrototype(BlueLevel, Scene);
+
+BlueLevel.prototype.loadScene = function () {
+    gEngine.TextFileLoader.loadTextFile(this.kSceneFile,
+        gEngine.TextFileLoader.eTextFileType.eXMLFile);
+};
+
+BlueLevel.prototype.initialize = function () {
     var sceneParser = new SceneFileParser(this.kSceneFile);
 
     // Step A: Parse the camera
@@ -21,27 +28,36 @@ MyGame.prototype.initialize = function () {
     sceneParser.parseSquares(this.mSqSet);
 };
 
+
 // The update function, updates the application state. Make sure to _NOT_ draw anything from this function
-MyGame.prototype.update = function () {
+BlueLevel.prototype.update = function () {
     // For this very simple game, let's move the white square and pulse the red
     var xform = this.mSqSet[0].getXform();
 
-    // Step A: Test for white square movement
+    // Step A: Test for the first square movement
+    var deltaX = 0.05;
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
         if (xform.getXPos() > 30) { // this is the right-bound of the window
             xform.setPosition(10, 60);
         }
-        xform.incXPosBy(0.05);
+        xform.incXPosBy(deltaX);
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
+        xform.incXPosBy(-deltaX);
+
+        if (xform.getXPos() < 11) { // this is the left-boundary
+            gEngine.GameLoop.stop();
+        }
     }
 
-    // Step B: Test for white square rotation
+    // Step B: Test for the first square rotation
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up)) {
         xform.incRotationInDegree(1);
     }
 
     xform = this.mSqSet[1].getXform();
 
-    // Step C: Test for pulsing the red square
+    // Step C: Test for pulsing the second square
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
         if (xform.getWidth() > 5) {
             xform.setSize(2, 2);
@@ -52,7 +68,7 @@ MyGame.prototype.update = function () {
 
 // This is the draw function, make sure to setup proper drawing environment, and more importantly, make sure
 // to _NOT_ change any state.
-MyGame.prototype.draw = function () {
+BlueLevel.prototype.draw = function () {
     // Step A: Clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
@@ -65,12 +81,9 @@ MyGame.prototype.draw = function () {
     }
 };
 
-MyGame.prototype.loadScene = function () {
-    gEngine.TextFileLoader.loadTextFile(this.kSceneFile,
-        gEngine.TextFileLoader.eTextFileType.eXMLFile);
-};
-
-MyGame.unloadScene = function () {
+BlueLevel.prototype.unloadScene = function () {
+    // Unload the scene file
     gEngine.TextFileLoader.unloadTextFile(this.kSceneFile);
-
+    var nextLevel = new MyGame(); // the next level
+    gEngine.Core.startScene(nextLevel);
 };

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>4.5: The Scene Objects Project</title>
+</head>
+<body onload="
+    var myGame = new MyGame();
+    gEngine.Core.initializeEngineCore('GLCanvas', myGame);
+">
+    <canvas id="GLCanvas" width="640" height="480">
+        Your browser does not support the HTML5 canvas.
+    </canvas>
+
+    <script type="text/javascript" src="src/lib/gl-matrix.js"></script>
+
+    <script type="text/javascript" src="src/Engine/Core/Engine_Core.js"></script>
+    <script type="text/javascript" src="src/Engine/Core/Engine_VertexBuffer.js"></script>
+    <script type="text/javascript" src="src/Engine/Core/Engine_Input.js"></script>
+    <script type="text/javascript" src="src/Engine/Core/Engine_GameLoop.js"></script>
+    <script type="text/javascript" src="src/Engine/Core/Resources/Engine_ResourceMap.js"></script>
+    <script type="text/javascript" src="src/Engine/Core/Resources/Engine_TextFileLoader.js"></script>
+    <script type="text/javascript" src="src/Engine/Core/Resources/Engine_DefaultResources.js"></script>
+    <script type="text/javascript" src="src/Engine/SimpleShader.js"></script>
+    <script type="text/javascript" src="src/Engine/Transform.js"></script>
+    <script type="text/javascript" src="src/Engine/Renderable.js"></script>
+    <script type="text/javascript" src="src/Engine/Camera.js"></script>
+    <script type="text/javascript" src="src/Engine/Scene.js"></script>
+
+    <script type="text/javascript" src="src/MyGame/SceneFileParser.js"></script>
+    <script type="text/javascript" src="src/MyGame/MyGame.js"></script>
+    <script type="text/javascript" src="src/MyGame/BlueLevel.js"></script>
+</body>
+</html>
